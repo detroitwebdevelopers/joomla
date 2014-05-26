@@ -1,6 +1,6 @@
-/* Low End Install */
+# Low End Install */
 
-/* https://github.com/detroitwebdevelopers/joomla/archive/master.zip */
+# https://github.com/detroitwebdevelopers/joomla/archive/master.zip */
 
 #!/bin/bash
 
@@ -286,7 +286,7 @@ END
     invoke-rc.d inetutils-syslogd start
 }
 
-function install_wordpress {
+function install_joomla{
     check_install wget wget
     if [ -z "$1" ]
     then
@@ -397,13 +397,13 @@ system)
     install_syslogd
     install_dropbear
     ;;
-wordpress)
-    install_wordpress $2
+joomla)
+    install_joomla $2
     ;;
 *)
     echo 'Usage:' `basename $0` '[option]'
     echo 'Available option:'
-    for option in system exim4 mysql nginx php wordpress
+    for option in system exim4 mysql nginx php joomla
     do
         echo '  -' $option
     done

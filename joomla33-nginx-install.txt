@@ -148,7 +148,7 @@ function install_nginx {
     check_install nginx nginx
     
     # Need to increase the bucket size for Debian 5.
-    cat > /etc/nginx/conf.d/lowendbox.conf <<END
+    cat > /etc/nginx/conf.d/lowendj33.conf <<END
 server_names_hash_bucket_size 64;
 END
 
