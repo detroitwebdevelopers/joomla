@@ -1,6 +1,4 @@
-# Low End Install */
-
-# https://github.com/detroitwebdevelopers/joomla/archive/master.zip */
+/* Default Script */
 
 #!/bin/bash
 
@@ -286,17 +284,20 @@ END
     invoke-rc.d inetutils-syslogd start
 }
 
-function install_joomla{
-    #check_install wget wget
-    #if [ -z "$1" ]
-    #then
-    #    die "Usage: `basename $0` joomla <hostname>"
-    #fi
+function install_wordpress {
+    check_install wget wget
+    if [ -z "$1" ]
+    then
+        die "Usage: `basename $0` wordpress <hostname>"
+    fi
 
-    # Downloading the Joomla 3.3 distribution.
-    mkdir /tmp/joomla.$$
+    # Downloading the WordPress' latest and greatest distribution.
+    mkdir /tmp/wordpress.$$
     wget -O - http://joomlacode.org/gf/download/frsrelease/19393/158833/Joomla_3.3.0-Stable-Full_Package.tar.gz | \
-        tar zxf - -C /tmp/joomla.$$
+        tar zxf - -C /tmp/wordpress.$$
+    mkdir /var/www/$1
+    mv /tmp/wordpress.$$/* "/var/www/$1"
+    rm -rf /tmp/wordpress.$$
     chown root:root -R "/var/www/$1"
 
     # Setting up the MySQL database
@@ -305,8 +306,6 @@ function install_joomla{
     # MySQL userid cannot be more than 15 characters long
     userid="${userid:0:15}"
     passwd=`get_password "$userid@mysql"`
-    sed -i "s/database_name_here/$dbname/; s/username_here/$userid/; s/password_here/$passwd/" \
-        "/var/www/$1/wp-config.php"
     mysqladmin create "$dbname"
     echo "GRANT ALL PRIVILEGES ON \`$dbname\`.* TO \`$userid\`@localhost IDENTIFIED BY '$passwd';" | \
         mysql
@@ -367,6 +366,7 @@ function remove_unneeded {
 function update_upgrade {
     # Run through the apt-get update/upgrade first. This should be done before
     # we try to install any package
+    add-apt-repository ppa:ondrej/php5
     apt-get -q -y update
     apt-get -q -y upgrade
 }
@@ -397,13 +397,13 @@ system)
     install_syslogd
     install_dropbear
     ;;
-joomla)
-    install_joomla $2
+wordpress)
+    install_wordpress $2
     ;;
 *)
     echo 'Usage:' `basename $0` '[option]'
     echo 'Available option:'
-    for option in system exim4 mysql nginx php joomla
+    for option in system exim4 mysql nginx php wordpress
     do
         echo '  -' $option
     done
