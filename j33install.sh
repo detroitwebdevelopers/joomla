@@ -287,11 +287,11 @@ END
 }
 
 function install_joomla{
-    check_install wget wget
-    if [ -z "$1" ]
-    then
-        die "Usage: `basename $0` joomla <hostname>"
-    fi
+    #check_install wget wget
+    #if [ -z "$1" ]
+    #then
+    #    die "Usage: `basename $0` joomla <hostname>"
+    #fi
 
     # Downloading the Joomla 3.3 distribution.
     mkdir /tmp/joomla.$$
